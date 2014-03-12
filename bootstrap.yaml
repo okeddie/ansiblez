@@ -1,0 +1,9 @@
+---
+- hosts: ansislave
+  tasks:
+  - name: Installing VIM
+    yum: pkg=vim state=latest
+  - name: Disable SELINUX
+    shell: /usr/sbin/setenforce 0 || /bin/true
+  - name: Make SELINUX disabled permanently
+    command: /bin/sed -i 's/enabled/disabled/g' /etc/sysconfig/selinux

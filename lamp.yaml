@@ -1,0 +1,20 @@
+---
+- hosts: ansislave
+  tasks:
+  - name: installing apache
+    yum: pkg=httpd state=latest
+    notify:
+    - restart apache
+  - name: checking apache running
+    service: name=httpd enabled=no state=started
+  - name: installing mysql
+    yum: pkg=mysql-server state=latest
+  - name: checking if mysqld is running
+    service: name=mysqld enabled=no state=started
+  - name: Updating MySQL root password
+    command: /usr/bin/mysqladmin -uroot password 'eYlwswaef'
+  - name: Configuring .my.cnf for mysql root user
+    copy: src=files/my.cnf dest=/root/.my.cnf 
+                mode=0600
+  - name: installing php
+    yum: pkg=php state=latest
