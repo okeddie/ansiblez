@@ -1,4 +1,5 @@
 ---
+# ansible-playbook -i /path/inventory -e node_type={web|db} ping.yaml
 - hosts: "{{node_type}}_nodes"
   remote_user: root
   tasks:
