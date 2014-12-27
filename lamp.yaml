@@ -1,10 +1,11 @@
+# ansible-playbook -i hosts.yaml -e node_type=web lamp.yaml
 ---
-- hosts: ansislave
+- hosts: "{{node_type}}_nodes"
   tasks:
   - name: installing apache
     yum: pkg=httpd state=latest
     notify:
-    - restart apache
+      - restart apache
   - name: checking apache running
     service: name=httpd enabled=no state=started
   - name: installing mysql
