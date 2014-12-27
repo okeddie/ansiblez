@@ -1,0 +1,12 @@
+#
+# /etc/fstab
+# Created by anaconda on Wed Sep 12 06:44:26 2012
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/vg_nas-lv_root /                       ext4    defaults        1 1
+UUID=e2cd5f71-cc52-4f36-acea-3e498d9588d4 /boot                   ext4    defaults        1 2
+/dev/mapper/vg_nas-lv_swap swap                    swap    defaults        0 0
+/dev/md/mdr5 /nas ext4 defaults,noatime,nodiratime			  0 0
+/dev/mapper/nas_backup-nas_backuplv /backups ext4 defaults 0 0
