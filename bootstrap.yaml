@@ -1,5 +1,6 @@
 ---
-- hosts: ansislave
+# ansible-playbook -vvi hosts.yaml -e node_type=web bootstrap.yaml
+- hosts: "{{node_type}}_nodes"
   tasks:
   - name: Installing VIM
     yum: pkg=vim state=latest
