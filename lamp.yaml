@@ -13,7 +13,7 @@
   - name: checking if mysqld is running
     service: name=mysqld enabled=no state=started
   - name: Updating MySQL root password
-    command: /usr/bin/mysqladmin -uroot password 'eYlwswaef'
+    command: /usr/bin/mysqladmin -uroot password 'redacted'
   - name: Configuring .my.cnf for mysql root user
     copy: src=files/my.cnf dest=/root/.my.cnf 
                 mode=0600
