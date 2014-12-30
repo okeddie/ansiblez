@@ -1,10 +1,31 @@
 ---
 # ansible-playbook -vvi hosts.yaml -e node_type=web bootstrap.yaml
+# ansible-playbook -vv -i hosts.yaml -e node_type=web bootstrap.yaml --start-at-task="Service Check"
 - hosts: "{{node_type}}_nodes"
   tasks:
-  - name: Installing VIM
-    yum: pkg=vim state=latest
+# install software
+  - name: Installing Packages
+    yum: pkg={{item}} state=latest
+    with_items:
+    - vim
+    - xterm
+    - bind-utils
+    - openssh-server
+
+# disarm selinux
   - name: Disable SELINUX
     shell: /usr/sbin/setenforce 0 || /bin/true
+
   - name: Make SELINUX disabled permanently
     command: /bin/sed -i 's/enabled/disabled/g' /etc/sysconfig/selinux
+
+# create user
+  - name: Ensure user
+    user: name={{item}} state=present groups=wheel
+    with_items:
+    - eddie
+# spot check service
+  - name: Service Check
+    service: name={{item}} state=started enabled=yes
+    with_items:
+    - sshd
