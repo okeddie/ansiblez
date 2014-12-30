@@ -1,21 +1,25 @@
-# ansible-playbook -i hosts.yaml -e node_type=web lamp.yaml
+# ansible-playbook -vv -i hosts.yaml -e node_type=web lamp.yaml
+# ansible-playbook -vv -e node_type=web -i hosts.yaml lamp.yaml --start-at-task="Ensure LAMP Stack Persistent And Enabled"
 ---
 - hosts: "{{node_type}}_nodes"
   tasks:
-  - name: installing apache
-    yum: pkg=httpd state=latest
-    notify:
-      - restart apache
-  - name: checking apache running
-    service: name=httpd enabled=no state=started
-  - name: installing mysql
-    yum: pkg=mysql-server state=latest
-  - name: checking if mysqld is running
-    service: name=mysqld enabled=no state=started
+  - name: Installing LAMP Stack
+    yum: pkg={{item}} state=latest
+    with_items:
+    - httpd
+    - mysql-server
+    - php
+    - php-mysql
+  - name: Ensure LAMP Stack Persistent And Enabled
+    service: name={{item}} enabled=yes state=started
+    with_items:
+    - httpd
+    - mysqld
   - name: Updating MySQL root password
     command: /usr/bin/mysqladmin -uroot password 'redacted'
   - name: Configuring .my.cnf for mysql root user
     copy: src=files/my.cnf dest=/root/.my.cnf 
                 mode=0600
-  - name: installing php
-    yum: pkg=php state=latest
+# Pretty sure mysql and php are installed after apache to bouncing for good measure on modules
+    notify:
+      - restart apache
