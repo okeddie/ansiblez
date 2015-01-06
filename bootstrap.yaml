@@ -11,6 +11,8 @@
     - xterm
     - bind-utils
     - openssh-server
+    - screen
+    - sysstat
 
 # disarm selinux
   - name: Disable SELINUX
