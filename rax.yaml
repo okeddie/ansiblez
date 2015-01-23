@@ -13,7 +13,7 @@
       login_password: "{{ api_key }}"
       login_tenant_name: "{{ ddi }}"
       auth_url: https://identity.api.rackspacecloud.com/v2.0/
-      region_name: "{{ lookup('env','ENV_NAME') }}"
+      region_name: "{{ lookup('env','ENV_NAME') | upper }}"
       image_name: CentOS 7 (PVHVM)
-      flavor_ram: 4096
+      flavor_ram: 2048
       flavor_include: Performance
