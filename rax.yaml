@@ -1,0 +1,19 @@
+# playbook for deploying a rax instance:
+# currently authentication is failing
+# ENV_NAME=iad ansible-playbook -vv -e "username=some_username api_key='some_api_key' ddi=account_number" rax.yaml
+#
+- name: Deploy RAX Nova Instance
+  hosts: localhost
+  tasks:
+  - name: Deploying now...
+    nova_compute:
+      name: dev0
+      state: present
+      login_username: "{{ username }}"
+      login_password: "{{ api_key }}"
+      login_tenant_name: "{{ ddi }}"
+      auth_url: https://identity.api.rackspacecloud.com/v2.0/
+      region_name: "{{ lookup('env','ENV_NAME') | upper }}"
+      image_name: CentOS 7 (PVHVM)
+      flavor_ram: 2048
+      flavor_include: Performance
