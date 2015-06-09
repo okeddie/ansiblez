@@ -1,5 +1,5 @@
 ---
-# Usage: ansible-playbook -vv -i stellar_cluster -e "node=master,slave" --private-key .ssh/mycloud.key deploy-redis.yaml
+# Usage: ansible-playbook -vv -i stellar_cluster -e "node=master:slave" --private-key .ssh/mycloud.key deploy-redis.yaml
 # 
 # Alternate check
 # ansible -i all_nodes_stellar_cluster all --private-key .ssh/mycloud.key -m shell -c ssh -a "systemctl status redis.service"
