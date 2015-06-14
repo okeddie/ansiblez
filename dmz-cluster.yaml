@@ -1,13 +1,8 @@
 ---
-# Usage: ansible-playbook -vv -i stellar_cluster -e "node=master:slave" --private-key .ssh/mycloud.key dmz-cluster.yaml
+# Usage: ansible-playbook -vv -i stellar_cluster -e "node=master:slave state=disabled" dmz-cluster.yaml
 #
 - hosts: "{{node}}"
   tasks:
-
-#    We probably should use a shell command to specify eth1 interface
-  - name: Open port 6379
-    set_fact: snet_ip={{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}
-  - firewalld: zone=public permanent=true state=disabled port=6379/tcp
-  - firewalld: zone=dmz permanent=true state=disabled port=6379/tcp
-  - name: Checking service state...
-    service: name=firewalld.service state=restarted enabled=yes
+  - firewalld: zone=public permanent=true state="{{state}}" port=6379/tcp
+  - name: Force updates active
+    command: /usr/bin/firewall-cmd --reload
