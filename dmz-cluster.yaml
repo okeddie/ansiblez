@@ -1,8 +1,14 @@
 ---
-# Usage: ansible-playbook -vv -i stellar_cluster -e "node=master:slave state=disabled" dmz-cluster.yaml
+# Usage: ansible-playbook -vv -i stellar_cluster -e "node=all state=disabled policy=accept" dmz-cluster.yaml
+# Usage: ansible-playbook -vv -i stellar_cluster -e "node=slave state=enabled policy=accept" dmz-cluster.yaml
 #
 - hosts: "{{node}}"
   tasks:
-  - firewalld: zone=public permanent=true state="{{state}}" port=6379/tcp
+  - name: Gathering Facts...
+    set_fact: snet_ips={{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}
+  - name: Adding rules...
+    firewalld: rich_rule='rule family="ipv4" source address={{ hostvars[item]['ansible_eth1']['ipv4']['address'] }} "{{policy}}" ' zone=public permanent=true state="{{state}}"
+    with_items: groups["{{node}}"]
+
   - name: Force updates active
     command: /usr/bin/firewall-cmd --reload
