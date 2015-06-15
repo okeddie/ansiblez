@@ -4,8 +4,6 @@
 #
 - hosts: "{{node}}"
   tasks:
-  - name: Gathering Facts...
-    set_fact: snet_ips={{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}
   - name: Adding rules...
     firewalld: rich_rule='rule family="ipv4" source address={{ hostvars[item]['ansible_eth1']['ipv4']['address'] }} "{{policy}}" ' zone=public permanent=true state="{{state}}"
     with_items: groups["{{node}}"]
