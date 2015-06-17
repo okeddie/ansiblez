@@ -4,6 +4,9 @@
 #
 - hosts: "{{node}}"
   tasks:
+  - name: Force base firewall rules
+    copy: src=files/firewalld/zones/public.xml dest=/etc/firewalld/zones/public.xml mode=0644
+
   - name: Adding rules...
     firewalld: rich_rule='rule family="ipv4" source address={{ hostvars[item]['ansible_eth1']['ipv4']['address'] }} "{{policy}}" ' zone=public permanent=true state="{{state}}"
     with_items: groups["{{node}}"]
