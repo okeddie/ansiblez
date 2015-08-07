@@ -1,7 +1,8 @@
 ---
-# ansible-playbook -vvi hosts.yaml -e node_type=web bootstrap.yaml
-# ansible-playbook -vv -i hosts.yaml -e node_type=web bootstrap.yaml --start-at-task="Service Check"
-- hosts: "{{node_type}}_nodes"
+# ansible-playbook -vvi hosts.yaml -e node=web bootstrap.yaml
+# sudo ansible-playbook --user=root --private-key=/path/to/.ssh/auth.key -i ~/myhome_inventory -e "node=fed22" -vv bootstrap.yaml --start-at-task="Copy*"
+- hosts: "{{node}}"
+  sudo: yes
   tasks:
 # install software
   - name: Installing Packages
@@ -13,6 +14,14 @@
     - openssh-server
     - screen
     - sysstat
+    - samba
+    - system-config-printer
+    - system-config-samba
+    - autofs
+    - nfs-utils
+    - cifs-utils
+    - libvirt
+    - virt-manager
 
 # disarm selinux
   - name: Disable SELINUX
@@ -21,13 +30,24 @@
   - name: Make SELINUX disabled permanently
     command: /bin/sed -i 's/enabled/disabled/g' /etc/sysconfig/selinux
 
-# create user
-  - name: Ensure user
-    user: name={{item}} state=present groups=wheel
-    with_items:
-    - eddie
+  - name: Copy /etc/sysconfig/autofs
+    copy: src=files/fed22/etc/sysconfig/autofs dest=/etc/sysconfig/autofs force=yes
+          
+  - name: Copy auto.master
+    copy: src=files/fed22/etc/auto.master dest=/etc/auto.master force=yes
+
+  - name: Copy auto.itunes
+    copy: src=files/fed22/etc/auto.itunes dest=/etc/auto.itunes force=yes
+          
+  - name: Copy auto.win-7
+    copy: src=files/fed22/etc/auto.win-7 dest=/etc/auto.win-7 force=yes
+
 # spot check service
   - name: Service Check
     service: name={{item}} state=started enabled=yes
     with_items:
     - sshd
+    - nfs-server
+    - autofs
+    - cups
+    - libvirtd

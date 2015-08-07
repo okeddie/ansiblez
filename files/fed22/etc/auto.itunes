@@ -1,0 +1,1 @@
+iTunes  -fstype=cifs,rw,noperms,credentials=/home/eddie/.autofs.auth ://192.168.0.2/Media/Music/iTunes/iTunes\ Media
